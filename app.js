@@ -7,19 +7,19 @@ require("dotenv").config();
 //invocar a function connect do db.config (do mongoose)
 require("./config/db.config")();
 
-//criar app
+//criar aplicativo express - é, de fato, o nosso servidor
 const app = express();
 
-//configurar o app
+//configurar o app p/ receber arquivos em json da requisição
 app.use(express.json());
 
-//ROTAS
+//configurar o roteador
 //importar o coffeeRouter
 const coffeeRouter = require("./routes/coffee.routes");
 //toda rota "/coffee-inventory" que chegar, será encaminhada para coffeeRouter
 app.use("/coffee-inventory", coffeeRouter);
 
-//criar o "porteiro" (a porta está definida no arquivo .env)
+//subir o servidor e colocá-lo para ouvir as requisições HTTPe dar o retorno que está conectado na porta - é o "porteiro" (a porta está definida no arquivo .env)
 app.listen(Number(process.env.PORT), () => {
   console.log(`Server up and running at port ${process.env.PORT}.`);
 });
