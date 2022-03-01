@@ -53,12 +53,13 @@ router.patch("/edit-coffee/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const updatedCoffee = await CoffeeModel.findOneAndUpdate(
+      //findOndeAndUpdate recebe 2 parâmetros: 1) o que é para achar, 2) o que vai atualizar.
       { _id: id },
       { ...req.body },
       { new: true, runValidators: true } // => IMPORTANTE PARA A ROTA UPDATE!!!!
       //-> new: true => para retornar o objeto atualizado
       //-> runValidators: true => não deixa que a atualização "fure" o Schema (vai rodas todas as validações do Schema novamente na hora da atualização)
-    ); //findOndeAndUpdate recebe 2 parâmetros: 1) o que é para achar, 2) o que vai atualizar.
+    );
     return res.status(200).json(updatedCoffee);
   } catch (error) {
     console.error(error);

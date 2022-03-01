@@ -14,10 +14,15 @@ const app = express();
 app.use(express.json());
 
 //configurar o roteador
-//importar o coffeeRouter
+//importar o coffee.routes
 const coffeeRouter = require("./routes/coffee.routes");
 //toda rota "/coffee-inventory" que chegar, será encaminhada para coffeeRouter
 app.use("/coffee-inventory", coffeeRouter);
+
+//importar o order.routes
+const orderRouter = require("./routes/order.routes");
+///toda rota "/orders" que chegar, será encaminhada para orderRouter
+app.use("/orders", orderRouter);
 
 //subir o servidor e colocá-lo para ouvir as requisições HTTPe dar o retorno que está conectado na porta - é o "porteiro" (a porta está definida no arquivo .env)
 app.listen(Number(process.env.PORT), () => {

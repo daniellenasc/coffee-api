@@ -31,6 +31,8 @@ const coffeeSchema = new Schema({
     required: true,
     default: "Beans",
   },
+  price: { type: Number, required: true },
+  stok: { type: Number, require: true, default: 0 },
   //Como limitar a quantidade de elementos no array, usando a function arrayLimit, criada acima:
   sensoryNotes: {
     type: [{ type: String, maxLength: 64 }], // -> o tipo do sensory notes vai ser uma array de strings
@@ -40,6 +42,8 @@ const coffeeSchema = new Schema({
   acidity: { type: Number, min: 1, max: 5, default: 3 },
   sweetness: { type: Number, min: 1, max: 5, default: 3 },
   bitterness: { type: Number, min: 1, max: 5, default: 3 },
+  orderList: [{ type: mongoose.Schema.Types.ObjectId, ref: "Order" }], //-> relacionando os orderSchema, uma vez que essa relação deve estar nos dois lados.
+  //-> isso significa que vamos passar aqui: 1) um ObjectId, ou seja, o id de um outro objeto da DB para ser guardado nesse espaço, 2) a referência, ou seja, o nome do modelo criado (a string que está na exportação)
 });
 
 //exportar o mongoose.model
