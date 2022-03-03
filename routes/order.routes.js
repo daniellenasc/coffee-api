@@ -13,13 +13,22 @@ const CoffeeModel = require("../models/Coffee.model");
 //Create
 router.post("/create-order", async (req, res) => {
   try {
-    const createdOrder = await OrderModel.create({ ...req.body }); //-> order criada
-    const coffee = await CoffeeModel.findOneAndUpdate(
-      { _id: req.body.coffee },
-      { $push: { orderList: createdOrder._id } }
-    ); //-> localizar qual café terá comprado e inserir com .push() o id da order na orderList do coffee! = colocar (.push) dentro da array 'orderList' o id da 'createdOrder'
+    const coffee = await CoffeeModel.findOne({ _id: req.body.coffee });
+    const createdOrder = await OrderModel.create({
+      ...req.body,
+      totalAmount: coffee.price * req.body.quantityPurchased,
+    }); //-> order criada e calculado o valor total (prexo do café * quantidade comprada)
 
-    return res.status(201).json(createdOrder);
+    const coffeeUpdated = await CoffeeModel.updateOne(
+      { _id: req.body.coffee },
+      {
+        $push: { orderList: createdOrder._id },
+        stok: coffee.stok - createdOrder.quantityPurchased,
+      },
+      { new: true, runValidators: true }
+    );
+
+    return res.status(201).json({ createdOrder, coffeeUpdated }); //-> para retornar mais de um objeto, colocar dentro de chaves!
   } catch (error) {
     console.log(error);
     return res.status(500).json(error);

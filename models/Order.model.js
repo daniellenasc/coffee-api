@@ -9,7 +9,7 @@ const orderSchema = new Schema({
   //OBS:isso deve ser feito nos dois lados, ou seja, tbm será necessário relacionar o orderSchema lá no coffeSchema!
   quantityPurchased: { type: Number, required: true, default: 1 },
   totalAmount: { type: Number },
-  date: { type: Date, default: Date.now }, //-> tbm tem a opção de usar 'default: Date.now', que retorna um Number
+  date: { type: Date, default: Date.now }, //-> 'default: Date.now' retorna um Number
 });
 
 //exportar o mongoose.model
