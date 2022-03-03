@@ -14,6 +14,11 @@ const CoffeeModel = require("../models/Coffee.model");
 router.post("/create-order", async (req, res) => {
   try {
     const coffee = await CoffeeModel.findOne({ _id: req.body.coffee }); //-> achar o café referente àquela ordem
+
+    //para não deixar comprar mais cafés caso o estoque esteja em zero
+    if (coffee.stok - req.body.quantityPurchased < 0) {
+      return res.status(400).json({ msg: `Só temos ${coffee.stok} unidades.` });
+    }
     const createdOrder = await OrderModel.create({
       ...req.body,
       totalAmount: coffee.price * req.body.quantityPurchased,
@@ -49,6 +54,26 @@ router.get("/order-details/:orderId", async (req, res) => {
       _id: req.params.orderId,
     }).populate("coffee"); //o populate serve para retornar as informações daquele café (ao invés do número do id)
     return res.status(200).json(foundedOrder);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(error);
+  }
+});
+
+//Soft delete (não deleta de fato)
+router.delete("/delete-order/:orderId", async (req, res) => {
+  try {
+    //verificar se o parâmetro de rota existe (status 400 = Bad Request)
+    const order = await OrderModel.findOne({ _id: req.params.orderId });
+    if (!order) {
+      return res.status(400).json({ msg: "Ordem não encontrada" });
+    }
+    await OrderModel.findOneAndUpdate(
+      { _id: req.params.orderId },
+      { isDeleted: true, deletedDate: Date.now() }, //atualizar o campo isDeleted para true e a data
+      { new: true, runValidators: true }
+    );
+    return res.status(200).json({ msg: "Ok" });
   } catch (error) {
     console.error(error);
     res.status(500).json(error);

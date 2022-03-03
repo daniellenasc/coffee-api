@@ -10,6 +10,8 @@ const orderSchema = new Schema({
   quantityPurchased: { type: Number, required: true, default: 1 },
   totalAmount: { type: Number },
   date: { type: Date, default: Date.now }, //-> 'default: Date.now' retorna um Number
+  isDeleted: { type: Boolean, default: false }, //-> para o soft delete
+  deletedDate: { type: Date },
 });
 
 //exportar o mongoose.model
